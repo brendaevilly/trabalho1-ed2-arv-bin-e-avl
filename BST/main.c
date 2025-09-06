@@ -55,8 +55,8 @@ void menuTipoCatgoria(){
 
 TipoCategoria retornaTipo(int i){
     TipoCategoria tipo;
-    if(i == 1) tipo = NOTICIA;
-    else if(i == 2) tipo = ENTRETENIMENTO;
+    if(i == 0) tipo = NOTICIA;
+    else if(i == 1) tipo = ENTRETENIMENTO;
     else tipo = ESPORTE;
     return tipo;
 }
@@ -85,7 +85,7 @@ int main(){
         case 2:
             menuTipoCatgoria();
             printf("\nOpção: "); scanf("%d", &opTipoCT);
-            if(op > 0 && op < 4){
+            if(op > -1 && op < 3){
 
                 Categorias *nova;
                 if(!(nova = alocarCategoria(nova))) exit(1);
