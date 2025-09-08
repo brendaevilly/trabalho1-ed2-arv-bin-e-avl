@@ -59,8 +59,24 @@ Arvore *maiorAhEsquerda(Arvore *no){
     return no;
 }
 
+
+
+
+int validarApresentador(Apresentador *lista, char *nomeAp, char *nomeStream, char *nomeCategoria) {
+    int i = 1;
+    deixaMaiuscula(nomeAp);
+    deixaMaiuscula(nomeStream);
+    deixaMaiuscula(nomeCategoria);  // padroniza comparação
+    Apresentador *ap = buscaApresentador(lista, nomeAp);
+
+    if (!ap) i = 0;
+    if (strcmp(ap->nomeStreamAtual, nomeStream) != 0) i = 0;
+    if (strcmp(ap->nomeCategoriaAtual, nomeCategoria) != 0) i = 0;
+    return i;
+}
+
 // ÁRVORE
-void *preencherDado(TipoDado tipo, Arvore **novoNo) {
+void *preencherDado(TipoDado tipo, Arvore **novoNo){
     char auxi[50];
 
     if (tipo == STREAM) {
@@ -82,6 +98,7 @@ void *preencherDado(TipoDado tipo, Arvore **novoNo) {
 
         printf("Digite o nome do apresentador: ");
         scanf(" %[^\n]", (*novoNo)->dado.PROGRAMA.NomeApresentador);
+        deixaMaiuscula((*novoNo)->dado.PROGRAMA.NomeApresentador);
 
         printf("Digite o horário de início (HH:MM): ");
         scanf(" %[^\n]", (*novoNo)->dado.PROGRAMA.HorarioInicio);
@@ -89,6 +106,7 @@ void *preencherDado(TipoDado tipo, Arvore **novoNo) {
         printf("Digite o tempo (em minutos): ");
         scanf("%d", &((*novoNo)->dado.PROGRAMA.Tempo));
     }
+
 }
 
 int inserirArvBin(Arvore **R, Arvore *novono) {
@@ -366,6 +384,7 @@ int cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador *lista
 // Precisa testar td abaixo
 
 void mostrarCategoriasDeST(char *nome, Arvore *arvST){
+    deixaMaiuscula(nome);
     Arvore *stream = buscarNaArvore(arvST, nome);
     if(stream){
         if(stream->dado.STREAM.categorias){
@@ -391,6 +410,8 @@ Categorias *buscaCategoria(Categorias *lista, char *nome){
 }
 
 void mostrarProgsDeCategDeST(char *nomeST, Arvore *arvST, char *nomeCateg){
+    deixaMaiuscula(nomeCateg);
+    deixaMaiuscula(nomeST);
     Arvore *stream = buscarNaArvore(arvST, nomeST);
     if(stream){
         if(existeCategoria(stream->dado.STREAM.categorias, nomeCateg)){
@@ -751,3 +772,24 @@ void mostrarApresentadoresDeCategoria(Apresentador *lista, char *nomeCategoria) 
     }
 }
 
+
+void mostrarDadosdeumProgramadeumaCategoriadeumaStream(Arvore *arvST, char *nomeST, char *nomeCateg, char *nomeProg){
+    deixaMaiuscula(nomeCateg);
+    deixaMaiuscula(nomeProg);
+    deixaMaiuscula(nomeST);
+    Arvore *stream = buscarNaArvore(arvST, nomeST);
+    if (stream){
+        Categorias *categoria = buscaCategoria(stream->dado.STREAM.categorias, nomeCateg);
+        if (categoria){
+            Arvore *prog = buscarNaArvore(categoria->programa, nomeProg);
+            if(prog){
+                printf("[PROGRAMA] Nome: %s | Apresentador: %s | Inicio: %s | Tempo: %d\n",
+                       prog->dado.PROGRAMA.nome,
+                       prog->dado.PROGRAMA.NomeApresentador,
+                       prog->dado.PROGRAMA.HorarioInicio,
+                       prog->dado.PROGRAMA.Tempo);
+            }
+            else printf("Programa %s não encontrado na categoria %s da stream %s.\n", nomeProg, nomeCateg, nomeST);
+        } else printf("Categoria %s não encontrada na stream %s.\n", nomeCateg, nomeST);         
+    } else printf("Stream %s não encontrada.\n", nomeST); 
+}

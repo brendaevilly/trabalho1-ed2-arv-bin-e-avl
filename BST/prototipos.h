@@ -92,14 +92,16 @@ int removerCategDeST(Arvore *arvST, char *nomeST, char *nomeCateg);
 Categorias *existeApresentadorEmCategorias(Categorias *lista, char *nomeAP, Arvore **res);
 
 // Apresentador
+int validarApresentador(Apresentador *lista, char *nomeAp, char *nomeStream, char *nomeCategoria);
 int cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador *listaAP);
 int inserirApresentadorOrdenado(Apresentador **listaA, Apresentador *novo);
+Apresentador *buscaApresentador(Apresentador *lista, char *nome);
 Apresentador *criaApresentador(char *nome, char *nomeCA, char *nomeST);
 int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *apresentador, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma);
 int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, Apresentador *lista, Apresentador *apresentador, Apresentador *substituto, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma);
 
 // ÁRVORES
-void *preencherDado(TipoDado tipo, Arvore **novoNo);
+int *preencherDado(TipoDado tipo, Arvore **novoNo);
 int inserirArvBin(Arvore **R, Arvore *novono);
 void imprimirArvore(Arvore *raiz);
 Arvore* buscarNaArvore(Arvore *raiz, char *nome);
@@ -122,5 +124,6 @@ int compararDiaSemana(DiaSemana d1, DiaSemana d2);
 void mostrarProgramasDeStreamPorDiaSemanaHorario(Arvore *arvST, char *nomeST, char *horario, DiaSemana dia);
 void mostrarProgramasPorDiaSemana(Arvore *raiz, DiaSemana dia);
 void mostrarProgramasDeCategoriaPorDiaSemana(Arvore *arvST, char *nomeST, char *nomeCateg, DiaSemana dia);
+void mostrarDadosdeumProgramadeumaCategoriadeumaStream(Arvore *arvST, char *nomeST, char *nomeCateg, char *nomoProg);
 
 #endif
