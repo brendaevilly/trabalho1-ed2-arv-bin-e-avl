@@ -227,6 +227,8 @@ int main(){
                 mostrarApresentadoresDeStream(apresentadores, nomeST);
                 break;
             case 14:
+                printf("\nNome da categoria: "); scanf("^ [%\n]", nomeCat);
+                mostrarApresentadoresDeCategoria(apresentadores, nomeCat);
                 break;
             case 15:
                 printf("\nNome da stream: "); scanf("^ [%\n]", nomeST);

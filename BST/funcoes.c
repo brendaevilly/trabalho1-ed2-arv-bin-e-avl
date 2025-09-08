@@ -793,3 +793,27 @@ void mostrarDadosdeumProgramadeumaCategoriadeumaStream(Arvore *arvST, char *nome
         } else printf("Categoria %s não encontrada na stream %s.\n", nomeCateg, nomeST);         
     } else printf("Stream %s não encontrada.\n", nomeST); 
 }
+
+void mostrarApresentadoresDeCategoria(Apresentador *lista, char *nomeCategoria) {
+    if (lista){
+        deixaMaiuscula(nomeCategoria);  // padroniza entrada
+
+        Apresentador *atual = lista;
+        int encontrou = 0;
+
+        while(atual) {
+            if(strcmp(atual->nomeCategoriaAtual, nomeCategoria) == 0) {
+                printf("[APRESENTADOR] Nome: %s | Categoria: %s | Stream Atual: %s\n",
+                    atual->nome,
+                    atual->nomeCategoriaAtual,
+                    atual->nomeStreamAtual);
+                encontrou = 1;
+            }
+            atual = atual->prox;
+        }
+
+        if(!encontrou) printf("Nenhum apresentador encontrado na categoria %s.\n", nomeCategoria);
+    }
+
+    
+}

@@ -11,12 +11,12 @@ struct apresentador;
 struct arvore;
 
 // ENUMS
-typedef enum {STREAM, PROGRAMA} TipoDado;
-typedef enum {NOTICIA, ENTRETENIMENTO, ESPORTE} TipoCategoria;
-typedef enum {DIARIO, SEMANAL, QUINZENAL, MENSAL} Periodicidade;
-typedef enum {AO_VIVO, SOB_DEMANDA} TipoTransmissao;
-typedef enum {REMOVER, ALTERAR} ProgramaAtual;
-typedef enum {DOMINGO, SEGUNDA, TERCA, QUARTA, QUINTA, SEXTA, SABADO} DiaSemana;
+typedef enum {STREAM = 1, PROGRAMA} TipoDado;
+typedef enum {NOTICIA = 1, ENTRETENIMENTO, ESPORTE} TipoCategoria;
+typedef enum {DIARIO = 1, SEMANAL, QUINZENAL, MENSAL} Periodicidade;
+typedef enum {AO_VIVO = 1, SOB_DEMANDA} TipoTransmissao;
+typedef enum {REMOVER = 1, ALTERAR} ProgramaAtual;
+typedef enum {DOMINGO = 1, SEGUNDA, TERCA, QUARTA, QUINTA, SEXTA, SABADO} DiaSemana;
 
 // STRUCTS E UNION PARA ÁRVORES
 typedef struct {
@@ -99,6 +99,7 @@ Apresentador *buscaApresentador(Apresentador *lista, char *nome);
 Apresentador *criaApresentador(char *nome, char *nomeCA, char *nomeST);
 int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *apresentador, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma);
 int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, Apresentador *lista, Apresentador *apresentador, Apresentador *substituto, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma);
+void mostrarApresentadoresDeCategoria(Apresentador *lista, char *nomeCategoria);
 
 // ÁRVORES
 int *preencherDado(TipoDado tipo, Arvore **novoNo);
