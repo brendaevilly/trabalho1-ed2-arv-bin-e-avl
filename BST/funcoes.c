@@ -550,6 +550,7 @@ int removerCategDeST(Arvore *arvST, char *nomeST, char *nomeCateg){
         }
     }
 
+    return removeu;
 }
 
 // AUXILIA FUNÇÕES DE ALTERAR
