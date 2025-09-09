@@ -63,7 +63,7 @@ typedef struct streamsAntigas {
 
 typedef struct apresentador {
     char nome[50], nomeCategoriaAtual[50], nomeStreamAtual[50];
-    StreamsAntigas *stAntigas;
+    StreamsAntigas stAntigas[50];
     int quantidadeStAntigas;
     struct apresentador *prox, *ant;
 } Apresentador;
@@ -127,5 +127,6 @@ void mostrarProgramasDeStreamPorDiaSemanaHorario(Arvore *arvST, char *nomeST, ch
 void mostrarProgramasPorDiaSemana(Arvore *raiz, DiaSemana dia);
 void mostrarProgramasDeCategoriaPorDiaSemana(Arvore *arvST, char *nomeST, char *nomeCateg, DiaSemana dia);
 void mostrarDadosdeumProgramadeumaCategoriadeumaStream(Arvore *arvST, char *nomeST, char *nomeCateg, char *nomoProg);
+void imprimiPGDiaHorario(Arvore *raiz, DiaSemana dia, char *horario);
 
 #endif

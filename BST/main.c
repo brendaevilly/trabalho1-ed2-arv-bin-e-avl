@@ -55,7 +55,7 @@ void menuTipoCatgoria(){
 }
 
 void menuDiaSemana(){
-    printf("-- MENU DIA DA SEMANA --");
+    printf("-- MENU DIA DA SEMANA --\n");
     printf("1 - DOMINGO\n");
     printf("2 - SEGUNDA\n");
     printf("3 - TERÇA\n");

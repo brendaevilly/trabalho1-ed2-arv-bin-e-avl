@@ -166,12 +166,13 @@ void preencherDado(TipoDado tipo, Arvore *novoNo){
         scanf("%d %d %d", &(novoNo->dado.PROGRAMA.data.dia), &(novoNo->dado.PROGRAMA.data.mes), &(novoNo->dado.PROGRAMA.data.ano)); printf("\n");
 
         int op;
-        printf("Digite a periodicidade do programa - (1 - DIÁRIO | 2 - SEMANAL | 3 - QUINZENAL | 4- MENSAL)"); printf("\n");
-        scanf("%d", &op);
+        printf("Digite a periodicidade do programa - (1 - DIÁRIO | 2 - SEMANAL | 3 - QUINZENAL | 4- MENSAL): "); 
+        scanf("%d", &op); printf("\n");
         novoNo->dado.PROGRAMA.periodicidade = (Periodicidade) op;
 
         if (op != DIARIO){ 
-            printf("Digite o dia da semana em que o programa é exibido\n(1 - DOMINGO | 2 - SEGUNDA | 3 - TERÇA | 4- QUARTA | 5 - QUINTA | 6 - SEXTA | 7 - SÁBADO))");
+            printf("(1 - DOMINGO | 2 - SEGUNDA | 3 - TERÇA | 4- QUARTA | 5 - QUINTA | 6 - SEXTA | 7 - SÁBADO)\n");
+            printf("Digite o dia da semana em que o programa é exibido: ");
             scanf("%d", &op); printf("\n");
             novoNo->dado.PROGRAMA.data.diasemana = (DiaSemana) op;
         }
@@ -182,7 +183,7 @@ void preencherDado(TipoDado tipo, Arvore *novoNo){
         printf("Digite o tempo (em minutos): ");
         scanf("%d", &(novoNo->dado.PROGRAMA.Tempo)); printf("\n");
 
-        printf("Por último, informe o tipo de transissão do programa - (1 - AO VIVO | 2 - SOB DEMANDA)");
+        printf("Por último, informe o tipo de transissão do programa (1 - AO VIVO | 2 - SOB DEMANDA): ");
         scanf("%d", &op); printf("\n");
         novoNo->dado.PROGRAMA.tipotransmissao = (TipoTransmissao) op; 
 
@@ -284,11 +285,6 @@ Categorias *criaCategoria(TipoCategoria tipoC, char *nomeC){
 }
 
 void encerraST(Apresentador *ap){
-    ap->quantidadeStAntigas += 1;
-
-    // realoca stAntigas para caber a nova entrada
-    ap->stAntigas = realloc(ap->stAntigas, sizeof(StreamsAntigas) * ap->quantidadeStAntigas);
-        if(ap->stAntigas){
         struct tm *infoTempoLocal = tempoAtual();
         ap->stAntigas[ap->quantidadeStAntigas - 1].fim.dia = infoTempoLocal->tm_mday;
         ap->stAntigas[ap->quantidadeStAntigas - 1].fim.mes = infoTempoLocal->tm_mon + 1;
@@ -296,36 +292,25 @@ void encerraST(Apresentador *ap){
 
         strcpy(ap->nomeStreamAtual, " ");
         strcpy(ap->nomeCategoriaAtual, " ");
-    }
 }
 
 void iniciaST(Apresentador *p){
-    p->quantidadeStAntigas += 1;
+    struct tm *infoTempoLocal = tempoAtual();
+    p->stAntigas[p->quantidadeStAntigas - 1].inicio.dia = infoTempoLocal->tm_mday;
+    p->stAntigas[p->quantidadeStAntigas - 1].inicio.mes = infoTempoLocal->tm_mon + 1;
+    p->stAntigas[p->quantidadeStAntigas - 1].inicio.ano = infoTempoLocal->tm_year + 1900;
 
-    // realoca stAntigas para caber a nova entrada
-    p->stAntigas = realloc(p->stAntigas, sizeof(StreamsAntigas) * p->quantidadeStAntigas);
-    if(p->stAntigas){
-        struct tm *infoTempoLocal = tempoAtual();
-        p->stAntigas[p->quantidadeStAntigas - 1].inicio.dia = infoTempoLocal->tm_mday;
-        p->stAntigas[p->quantidadeStAntigas - 1].inicio.mes = infoTempoLocal->tm_mon + 1;
-        p->stAntigas[p->quantidadeStAntigas - 1].inicio.ano = infoTempoLocal->tm_year + 1900;
+    p->stAntigas[p->quantidadeStAntigas - 1].fim.dia = 0;
+    p->stAntigas[p->quantidadeStAntigas - 1].fim.mes = 0;
+    p->stAntigas[p->quantidadeStAntigas - 1].fim.ano = 0;
 
-        p->stAntigas[p->quantidadeStAntigas - 1].fim.dia = 0;
-        p->stAntigas[p->quantidadeStAntigas - 1].fim.mes = 0;
-        p->stAntigas[p->quantidadeStAntigas - 1].fim.ano = 0;
-
-        free(infoTempoLocal); // libera ponteiro retornado por tempoAtualprintf("Erro ao alocar memoria para stAntigas!\n");
-    }
-
-    
+    free(infoTempoLocal); // libera ponteiro retornado por tempoAtualprintf("Erro ao alocar memoria para stAntigas!\n");
 }
 
 
 Apresentador *criaApresentador(char *nome, char *nomeCat, char *nomeST){
     Apresentador *novo = alocarApresentador(); 
     if(!novo) return NULL;
-    novo->stAntigas = (StreamsAntigas *)malloc(sizeof(StreamsAntigas)); 
-    if(!novo->stAntigas) return NULL;
 
     char tempNome[50], tempNomeST[50];
 
@@ -631,7 +616,7 @@ int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *ap
                 removerDaArvore(&(cat->programa), res);
 
                 // Aloca memória no vetor de stream antigas para a nova stream (só registra a data de início lá e o nome, data de fim é zerada)
-                apresentador->stAntigas = (StreamsAntigas *)realloc(apresentador->stAntigas, apresentador->quantidadeStAntigas * sizeof(StreamsAntigas));
+                apresentador->quantidadeStAntigas += 1;
                 strcpy(apresentador->stAntigas[apresentador->quantidadeStAntigas - 1].nome, novaST->dado.STREAM.nome);
                 iniciaST(apresentador);
                 strcpy(apresentador->nomeStreamAtual, novaST->dado.STREAM.nome);
@@ -688,7 +673,7 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
                     strcpy(substituto->nomeStreamAtual, atualST->dado.STREAM.nome);
 
                     // Aloca memória no vetor de stream antigas para a nova stream (só registra a data de início lá e o nome, data de fim é zerada)
-                    apresentador->stAntigas = (StreamsAntigas *)realloc(apresentador->stAntigas, apresentador->quantidadeStAntigas * sizeof(StreamsAntigas));
+                    apresentador->quantidadeStAntigas += 1;
                     strcpy(apresentador->stAntigas[apresentador->quantidadeStAntigas - 1].nome, novaST->dado.STREAM.nome);
                     iniciaST(apresentador);
                     strcpy(apresentador->nomeStreamAtual, novaST->dado.STREAM.nome);
@@ -734,22 +719,35 @@ void mostrarProgramasPorDiaSemana(Arvore *raiz, DiaSemana dia) {
     }
 }
 
+void imprimiPGDiaHorario(Arvore *raiz, DiaSemana dia, char *horario){
+    if(raiz){
+        if(raiz->dado.PROGRAMA.data.diasemana == dia && strcmp(raiz->dado.PROGRAMA.HorarioInicio, horario) == 0){
+            printf("[PROGRAMA] Nome: %s | Apresentador: %s | Dia: %d | Inicio: %s | Tempo: %d\n",
+                    raiz->dado.PROGRAMA.nome,
+                    raiz->dado.PROGRAMA.NomeApresentador,
+                    raiz->dado.PROGRAMA.data.diasemana,
+                    raiz->dado.PROGRAMA.HorarioInicio,
+                    raiz->dado.PROGRAMA.Tempo);
+        }
+        imprimiPGDiaHorario(raiz->esq, dia, horario);
+        imprimiPGDiaHorario(raiz->dir, dia, horario);
+    }
+}
+
 void mostrarProgramasDeStreamPorDiaSemanaHorario(Arvore *arvST, char *nomeST, char *horario, DiaSemana dia) {
     Arvore *stream = buscarNaArvore(arvST, nomeST);
     if(stream) {
         Categorias *cat = stream->dado.STREAM.categorias;
         if(cat) {
             Categorias *atual = cat;
-            if (strcmp(arvST->dado.PROGRAMA.HorarioInicio, horario) == 0){
-                do {
-                    mostrarProgramasPorDiaSemana(atual->programa, dia);
-                    atual = atual->prox;
-                } while(atual != cat);
-            }
-        }
-    } else {
-        printf("Stream %s não encontrada.\n", nomeST);
-    }
+            do{
+                if(atual->programa){
+                    imprimiPGDiaHorario(atual->programa, dia, horario);
+                }
+                atual = atual->prox;
+            }while(atual != cat);
+        }else printf("Essa stream não tem categorias nem programas!\n");
+    }else printf("Stream %s não encontrada.\n", nomeST);
 }
 
 void imprimeStreamsPorCategoria(Arvore *arvST, TipoCategoria tipo) {
