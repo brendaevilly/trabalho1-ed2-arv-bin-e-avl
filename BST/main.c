@@ -48,44 +48,24 @@ void menuAltAP(){
 }
 
 void menuTipoCatgoria(){
-    printf("-- MENU TIPO CATEGORIA --");
-    printf("0 - NOTICIA\n");
-    printf("1 - ENTRETENIMENTO\n");
-    printf("2 - ESPORTE\n");
-}
-
-TipoCategoria retornaTipo(int i){
-    TipoCategoria tipo;
-    if(i == 0) tipo = NOTICIA;
-    else if(i == 1) tipo = ENTRETENIMENTO;
-    else tipo = ESPORTE;
-    return tipo;
+    printf("-- MENU TIPO CATEGORIA --\n");
+    printf("1 - NOTICIA\n");
+    printf("2 - ENTRETENIMENTO\n");
+    printf("3 - ESPORTE\n");
 }
 
 void menuDiaSemana(){
     printf("-- MENU DIA DA SEMANA --");
-    printf("0 - DOMINGO\n");
-    printf("1 - SEGUNDA\n");
-    printf("2 - TERÇA\n");
-    printf("3 - QUARTA\n");
-    printf("4 - QUINTA\n");
-    printf("5 - SEXTA\n");
-    printf("6 - SÁBADO\n");
+    printf("1 - DOMINGO\n");
+    printf("2 - SEGUNDA\n");
+    printf("3 - TERÇA\n");
+    printf("4 - QUARTA\n");
+    printf("5 - QUINTA\n");
+    printf("6 - SEXTA\n");
+    printf("7 - SÁBADO\n");
 
 }
 
-DiaSemana retornaDia(int i){
-    DiaSemana dia;
-    if(i == 0) dia = DOMINGO;
-    else if(i == 1) dia = SEGUNDA;
-    else if(i == 2) dia = TERCA;
-    else if(i == 3) dia = QUARTA;
-    else if(i == 4) dia = QUINTA;
-    else if(i == 5) dia = SEXTA;
-    else dia = SABADO;
-
-    return dia;
-}
 
 int main(){
     setlocale(LC_ALL, "Portuguese");
@@ -95,18 +75,21 @@ int main(){
     Arvore *streams = inicializar();
     Apresentador *apresentadores = NULL;
 
-    int op, opTipoCT, verifica;
+    int op, opTipoCT, verifica, opDia;
     char nomeCat[50], nomeST[50], nomeAP[50], nomePG[50];
 
-    while(parada = 1){
-            menu();
+    while(parada){
+        printf("\n");
+        menu();
 
         printf("\nOpção: "); scanf("%d", &op);
+        printf("\n");
         switch (op){
             case 1:
-                Arvore *nova;
-                if(!(nova = alocar(nova, STREAM))) exit(1);
-                preencherDado(STREAM, &nova);
+                Arvore *nova = alocar(STREAM);
+                if(!nova) exit(1);
+                preencherDado(STREAM, nova);
+                printf("\n");
 
                 if((verifica = inserirArvBin(&streams, nova))) 
                     printf("Stream inserida na árvore com sucesso.\n");
@@ -115,169 +98,184 @@ int main(){
                 break;
             case 2:
                 menuTipoCatgoria();
-                printf("\nOpção: "); scanf("%d", &opTipoCT);
-                if(op > -1 && op < 3){
+                printf("\nOpção: "); scanf("%d", &opTipoCT); printf("\n");
+                if(opTipoCT > 0 && opTipoCT < 4){
 
-                    Categorias *nova;
-                    if(!(nova = alocarCategoria(nova))) exit(1);
-                    TipoCategoria tipo = retornaTipo(op);
+                    Categorias *nova = alocarCategoria(nova);
+                    if(!nova) exit(1);
+                    TipoCategoria tipo = opTipoCT;
 
-                    printf("\nNome da categoria: "); scanf(" %[^\n]", nomeCat);
+                    printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                     nova = criaCategoria(tipo, nomeCat);
-                    printf("\nNome da stream: "); scanf(" %[^\n]", nomeST);
+                    printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                     verifica = cadastrarCategoria(nova, nomeST, streams);
 
-                    if(verifica) printf("\nCategoria cadastrada com sucesso!\n");
-                    else rintf("\nNão foi possível cadastrar categoria, tente novamente e verifique suas informações.\n");
+                    if(verifica) printf("\nCategoria cadastrada com sucesso!");
+                    else printf("\nNão foi possível cadastrar categoria, tente novamente e verifique suas informações.");
 
-                }else printf("Opção de categoria inválida.\n");
+                }else printf("\nOpção de categoria inválida.");
                 break;
             case 3:
-                Arvore *novo;
-                if(!(novo = alocar(novo, PROGRAMA))) exit(1);
-                preencherDado(PROGRAMA, &novo);
-
-                printf("\nStream do programa: "); scanf("^ [%\n]", nomeST);
-                printf("\nNome da categoria: "); scanf("^ [%\n]", nomeCat);
-
-                verifica = validarApresentador(apresentadores, novo->dado.PROGRAMA.nome, nomeST, nomeCat);
-
+                printf("Stream do programa: "); scanf(" %[^\n]", nomeST);
                 Arvore *stream = buscarNaArvore(streams, nomeST);
-                Arvore *res;
-                existeApresentadorEmCategorias(stream->dado.STREAM.categorias, novo->dado.PROGRAMA.NomeApresentador, &res);
 
-                if(verifica && !res){
-                    int i = inserirArvBin(&(stream->dado.STREAM.categorias->programa), novo);
-                    
-                    if(!i) printf("Não foi possível inserir esse programa pois o mesmo já existe na stream!\n");
-                    else printf("Programa inserido com sucesso!\n");
-                }else printf("Apresentador inválido!\n");
+                if(stream){
+                    if(stream->dado.STREAM.categorias){
+                        printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
+
+                        int existe = existeCategoria(stream->dado.STREAM.categorias, nomeCat);
+
+                        if(existe){
+                            Arvore *novo = alocar(PROGRAMA);
+                            if(!novo) exit(1);
+                            preencherDado(PROGRAMA, novo);
+
+                            verifica = validarApresentador(apresentadores, novo->dado.PROGRAMA.NomeApresentador, nomeST, nomeCat);
+
+                            Arvore *res = NULL;
+                            existeApresentadorEmCategorias(stream->dado.STREAM.categorias, novo->dado.PROGRAMA.NomeApresentador, &res);
+
+                            if(verifica && res == NULL){
+                                int i = inserirArvBin(&(stream->dado.STREAM.categorias->programa), novo);
+                                
+                                if(!i){
+                                    printf("\nNão foi possível inserir esse programa pois o mesmo já existe na stream!");
+                                    free(novo);
+                                }
+                                else printf("\nPrograma inserido com sucesso!");
+                            }else {
+                                printf("\nApresentador inválido!");
+                                free(novo);
+                            }
+                        } else printf("\nEssa categoria não existe na stream!");
+                    }else printf("\nEssa stream não possui categorias para o programa!");
+                }else printf("\nStream não encontrada!");
+                
                 break;
             case 4:
-                printf("\nNome do apresentador: "); scanf("^ [%\n]", nomeAP);
-                printf("\nStream do apresentador: "); scanf("^ [%\n]", nomeST);
-                printf("\nCategoria do apresentador: "); scanf("^ [%\n]", nomeCat);
+                printf("Nome do apresentador: "); scanf(" %[^\n]", nomeAP);
+                printf("Stream do apresentador: "); scanf(" %[^\n]", nomeST);
+                printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
 
-                Apresentador *novo = criaApresentador(nomeAP, nomeCat, nomeST);
-                if(novo){
-                    verifica = inserirApresentadorOrdenado(&apresentadores, novo);
-                    if(verifica) printf("Apresentador adicionado a lista com sucesso!\n");
-                    else printf("Não foi possível adicionar esse apresentador a lista!\n");
-                }else printf("Erro ao criar apresentador!\n");
+                Apresentador *novoAP = NULL; 
+                novoAP = criaApresentador(nomeAP, nomeCat, nomeST);
+                if(novoAP){
+                    verifica = cadastrarApresentador(novoAP, streams, &apresentadores);
+                    if(verifica) printf("\nApresentador adicionado a lista com sucesso!");
+                    else printf("\nNão foi possível adicionar esse apresentador a lista!");
+                }else printf("\nErro ao criar apresentador!");
                 break;
             case 5:
                 imprimirArvore(streams);
                 break;
             case 6:
-                printf("\nNome da categoria: "); scanf("^ [%\n]", nomeCat);
+                printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 mostrarStsQueTemCategoria(nomeCat, streams);
                 break;
             case 7:
                 menuTipoCatgoria();
                 int opCat;
-                printf("\nOpção: "); scanf("%d", &opCat);
-                if(opCat > -1 && opCat < 3){
-                    TipoCategoria tipo = retornaTipo(opCat);
+                printf("Opção: "); scanf("%d", &opCat);
+                if(opCat > 0 && opCat < 4){
+                    TipoCategoria tipo = opCat;
                     imprimeStreamsPorCategoria(streams, tipo);
-                }else printf("Opção de categoria inválida!\n");
+                }else printf("\nOpção de categoria inválida!");
                 break;
             case 8:
-                printf("\nNome da stream: "); scanf("^ [%\n]", nomeST);
+                printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 mostrarCategoriasDeST(nomeST, streams);
                 break;
             case 9:
-                printf("\nNome da stream: "); scanf("^ [%\n]", nomeST);
-                printf("\nNome da categoria: "); scanf("^ [%\n]", nomeCat);
+                printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
+                printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 mostrarProgsDeCategDeST(nomeST, streams, nomeCat);
                 break;
             case 10:
                 menuDiaSemana();
-                int opDia;
-                printf("\nOpção: "); scanf("%d", opDia);
-                if(opDia > -1 && opDia < 7){
-                    printf("\nNome da stream: "); scanf("^ [%\n]", nomeST);
-                    DiaSemana dia = retornaDia(opDia);
-                    char horario; 
-                    printf("\nHorário: "); scanf("^ [%\n]", horario);
+                printf("\nOpção: "); scanf("%d", &opDia);
+                if(opDia > 0 && opDia < 8){
+                    printf("\nNome da stream: "); scanf(" %[^\n]", nomeST);
+                    DiaSemana dia = opDia;
+                    char horario[10]; 
+                    printf("Horário: "); scanf(" %[^\n]", horario);
 
                     mostrarProgramasDeStreamPorDiaSemanaHorario(streams, nomeST, horario, dia);
-                }else printf("Opção de dia inválida!\n");
+                }else printf("\nOpção de dia inválida!");
                 break;
             case 11:
                 menuDiaSemana();
-                int opDia;
-                printf("\nOpção: "); scanf("%d", opDia);
-                if(opDia > -1 && opDia < 7){
-                    printf("\nNome da stream: "); scanf("^ [%\n]", nomeST);
-                    printf("\nNome da categoria: "); scanf("^ [%\n]", nomeCat);
-                    DiaSemana dia = retornaDia(opDia);
+                printf("\nOpção: "); scanf("%d", &opDia);
+                if(opDia > 0 && opDia < 8){
+                    printf("\nNome da stream: "); scanf(" %[^\n]", nomeST);
+                    printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
+                    DiaSemana dia = opDia;
                     
                     mostrarProgramasDeCategoriaPorDiaSemana(streams, nomeST, nomeCat, dia);
                 }else printf("Opção de dia inválida!\n");
                 break;
             case 12:
-                printf("\nNome da stream: "); scanf("^ [%\n]", nomeST);
-                printf("\nNome da categoria: "); scanf("^ [%\n]", nomeCat);
-                printf("\nNome do programa: "); scanf("^ [%\n]", nomePG);
+                printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
+                printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
+                printf("Nome do programa: "); scanf(" %[^\n]", nomePG);
 
                 mostrarDadosdeumProgramadeumaCategoriadeumaStream(streams, nomeST, nomeCat, nomePG);
                 break;
             case 13:
-                printf("\nNome da stream: "); scanf("^ [%\n]", nomeST);
+                printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 mostrarApresentadoresDeStream(apresentadores, nomeST);
                 break;
             case 14:
-                printf("\nNome da categoria: "); scanf("^ [%\n]", nomeCat);
+                printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 mostrarApresentadoresDeCategoria(apresentadores, nomeCat);
                 break;
             case 15:
-                printf("\nNome da stream: "); scanf("^ [%\n]", nomeST);
-                printf("\nNome da categoria: "); scanf("^ [%\n]", nomeCat);
-                printf("\nNome do programa: "); scanf("^ [%\n]", nomePG);
+                printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
+                printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
+                printf("Nome do programa: "); scanf(" %[^\n]", nomePG);
 
                 verifica = removerProgramaDeCateDeST(streams, nomeST, nomeCat, nomePG);
-                if(verifica) printf("\nRemovido com sucesso!\n");
-                else printf("\nNão foi possível remover!\n");
+                if(verifica) printf("\nRemovido com sucesso!");
+                else printf("\nNão foi possível remover!");
                 break;
             case 16:
-                printf("\nNome da stream: "); scanf("^ [%\n]", nomeST);
-                printf("\nNome da categoria: "); scanf("^ [%\n]", nomeCat);
+                printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
+                printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
 
                 verifica = removerCategDeST(streams, nomeST, nomeCat);
-                if(verifica) printf("\nRemovida com sucesso!\n");
-                else printf("\nNão foi possível remover!\n");
+                if(verifica) printf("\nRemovida com sucesso!");
+                else printf("\nNão foi possível remover!");
                 break;
             case 17:
                 menuAltAP();
                 int opAlt;
                 printf("\nOpção: "); scanf("%d", &opAlt);
 
-                printf("\nNome do apresentador: "); scanf("^ [%\n]", nomeAP);
+                printf("\nNome do apresentador: "); scanf(" %[^\n]", nomeAP);
                 Apresentador *ap = buscaApresentador(apresentadores, nomeAP);
 
                 if(ap){
-                    printf("\nNome da nova stream: "); scanf("^ [%\n]", nomeST);
-                    printf("\nNome da nova categoria: "); scanf("^ [%\n]", nomeCat);
-                    Arvore *novoPG;
-                    preencherDado(PROGRAMA, &novoPG);
+                    printf("Nome da nova stream: "); scanf(" %[^\n]", nomeST);
+                    printf("Nome da nova categoria: "); scanf(" %[^\n]", nomeCat);
+                    Arvore *novoPG = NULL;
+                    preencherDado(PROGRAMA, novoPG);
                     if(opAlt == 1){
                         verifica = alterarStreamDeApresentador_removePrograma(streams, ap, nomeST, novoPG, nomeCat);
                     }else if(opAlt == 2){
                         char sub[50];
-                        printf("\nNome do apresentador substituto: "); scanf("^ [%\n]", sub);
+                        printf("Nome do apresentador substituto: "); scanf(" %[^\n]", sub);
                         Apresentador *substituto = buscaApresentador(apresentadores, sub);
                         if(sub){
                             verifica = alterarStreamDeApresentador_substituiApresentadorPrograma(streams, apresentadores, ap, substituto, nomeST, novoPG, nomeCat);
-                        }else printf("\nO apresentador substituto não existe!\n");
-                    }else printf("\nOpção inválida!\n"); 
-                }else printf("\nApresentador não existe!\n");
+                        }else printf("\nO apresentador substituto não existe!");
+                    }else printf("\nOpção inválida!"); 
+                }else printf("\nApresentador não existe!");
                 break;
             case 0:
                 parada = 0;
                 break;
 
             default:
-                printf("Escolha uma opção válida!\n");
+                printf("\nEscolha uma opção válida!");
                 break;
         }
     }
