@@ -42,7 +42,7 @@ void menu(){
 }
 
 void menuAltAP(){
-    printf("-- MENU ALTERAR --");
+    printf("-- MENU ALTERAR --\n");
     printf("1 - Remover programa\n");
     printf("2 - Alterar apresentador\n");
 }
@@ -256,16 +256,27 @@ int main(){
                 if(ap){
                     printf("Nome da nova stream: "); scanf(" %[^\n]", nomeST);
                     printf("Nome da nova categoria: "); scanf(" %[^\n]", nomeCat);
-                    Arvore *novoPG = NULL;
+                    Arvore *novoPG = alocar(PROGRAMA);
+                    if(!novoPG){
+                        printf("\nErro ao criar novo programa!\n");
+                        exit(1);
+                    }
+                    printf("-- NOVO PROGRAMA --\n");
                     preencherDado(PROGRAMA, novoPG);
                     if(opAlt == 1){
                         verifica = alterarStreamDeApresentador_removePrograma(streams, ap, nomeST, novoPG, nomeCat);
+
+                        if(verifica) printf("\nApresentador alterado com sucesso!\n");
+                        else printf("\nNão foi possível alterar apresentador, verifique suas informações!\n");
                     }else if(opAlt == 2){
                         char sub[50];
                         printf("Nome do apresentador substituto: "); scanf(" %[^\n]", sub);
                         Apresentador *substituto = buscaApresentador(apresentadores, sub);
                         if(sub){
                             verifica = alterarStreamDeApresentador_substituiApresentadorPrograma(streams, apresentadores, ap, substituto, nomeST, novoPG, nomeCat);
+
+                            if(verifica) printf("\nApresentador alterado com sucesso!\n");
+                            else printf("\nNão foi possível alterar apresentador, verifique suas informações!\n");
                         }else printf("\nO apresentador substituto não existe!");
                     }else printf("\nOpção inválida!"); 
                 }else printf("\nApresentador não existe!");
