@@ -157,7 +157,8 @@ int main(){
                 printf("Stream do apresentador: "); scanf(" %[^\n]", nomeST);
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
 
-                Apresentador *novoAP = NULL; 
+                Apresentador *novoAP = alocarApresentador();
+                if(!novoAP) exit(1); 
                 novoAP = criaApresentador(nomeAP, nomeCat, nomeST);
                 if(novoAP){
                     verifica = cadastrarApresentador(novoAP, streams, &apresentadores);
@@ -271,13 +272,13 @@ int main(){
                     }else if(opAlt == 2){
                         char sub[50];
                         printf("Nome do apresentador substituto: "); scanf(" %[^\n]", sub);
-                        Apresentador *substituto = buscaApresentador(apresentadores, sub);
-                        if(sub){
-                            verifica = alterarStreamDeApresentador_substituiApresentadorPrograma(streams, apresentadores, ap, substituto, nomeST, novoPG, nomeCat);
+                        Apresentador *substituto = criaApresentador(sub, ap->nomeCategoriaAtual, ap->nomeStreamAtual);
+                        if(substituto){
+                            verifica = alterarStreamDeApresentador_substituiApresentadorPrograma(streams, &apresentadores, ap, substituto, nomeST, novoPG, nomeCat);
 
                             if(verifica) printf("\nApresentador alterado com sucesso!\n");
                             else printf("\nNão foi possível alterar apresentador, verifique suas informações!\n");
-                        }else printf("\nO apresentador substituto não existe!");
+                        }else printf("\nErro ao alocar memória do substituto!\n");
                     }else printf("\nOpção inválida!"); 
                 }else printf("\nApresentador não existe!");
                 break;

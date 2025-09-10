@@ -101,7 +101,7 @@ int inserirApresentadorOrdenado(Apresentador **listaA, Apresentador *novo);
 Apresentador *buscaApresentador(Apresentador *lista, char *nome);
 Apresentador *criaApresentador(char *nome, char *nomeCat, char *nomeST);
 int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *apresentador, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma);
-int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, Apresentador *lista, Apresentador *apresentador, Apresentador *substituto, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma);
+int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, Apresentador **lista, Apresentador *apresentador, Apresentador *substituto, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma);
 void mostrarApresentadoresDeCategoria(Apresentador *lista, char *nomeCategoria);
 void encerraST(Apresentador *ap);
 void iniciaST(Apresentador *p);

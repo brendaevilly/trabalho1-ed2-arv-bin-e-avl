@@ -621,6 +621,7 @@ int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *ap
                 strcpy(apresentador->stAntigas[apresentador->quantidadeStAntigas - 1].nome, novaST->dado.STREAM.nome);
                 iniciaST(apresentador);
                 strcpy(apresentador->nomeStreamAtual, novaST->dado.STREAM.nome);
+                strcpy(apresentador->nomeCategoriaAtual, categoriaNovoPrograma);
                 
                 // Insere o novo programa na nova Stream
                 auxi = buscaERetornaCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
@@ -634,7 +635,7 @@ int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *ap
 
 // ALTERAR COLOCANDO OUTRO APRESENTADR NO PROGRAMA ANTIGO DO APRESENTADOR
 
-int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, Apresentador *lista, Apresentador *apresentador, Apresentador *substituto, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma){
+int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, Apresentador **lista, Apresentador *apresentador, Apresentador *substituto, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma){
     int i = 0;
     deixaMaiuscula(nomeNovaStream);
     deixaMaiuscula(categoriaNovoPrograma);
@@ -661,7 +662,7 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
             if(j){
                 Categorias *auxi;
                 // Insere o apresentador substituto na lista de apresentadores
-                int k = inserirApresentadorOrdenado(&lista, substituto);
+                int k = cadastrarApresentador(substituto, atualST, lista);
                 if(k){
                     // EcerraST = coloca a data de término na Stream no vetor de Streams antigas
                     encerraST(apresentador);
@@ -678,6 +679,7 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
                     strcpy(apresentador->stAntigas[apresentador->quantidadeStAntigas - 1].nome, novaST->dado.STREAM.nome);
                     iniciaST(apresentador);
                     strcpy(apresentador->nomeStreamAtual, novaST->dado.STREAM.nome);
+                    strcpy(apresentador->nomeCategoriaAtual, categoriaNovoPrograma);
                     
                     // Insere o novo programa na nova Stream
                     auxi = buscaERetornaCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
