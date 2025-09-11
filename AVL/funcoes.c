@@ -218,16 +218,22 @@ void preencherDado(TipoDado tipo, Arvore *novoNo){
         printf("Digite a data da primeira transmissão do programa (DIA | MES | ANO): ");
         scanf("%d %d %d", &(novoNo->dado.PROGRAMA.data.dia), &(novoNo->dado.PROGRAMA.data.mes), &(novoNo->dado.PROGRAMA.data.ano)); printf("\n");
 
-        int op;
-        printf("Digite a periodicidade do programa - (1 - DIÁRIO | 2 - SEMANAL | 3 - QUINZENAL | 4- MENSAL): "); 
-        scanf("%d", &op); printf("\n");
+        int op = 0;
+        while(op < 1 || op > 4){
+            printf("Digite a periodicidade do programa - (1 - DIÁRIO | 2 - SEMANAL | 3 - QUINZENAL | 4- MENSAL): "); 
+            scanf("%d", &op); printf("\n"); 
+        }
         novoNo->dado.PROGRAMA.periodicidade = (Periodicidade) op;
 
+        int opDia = 0;
         if (op != DIARIO){ 
-            printf("(1 - DOMINGO | 2 - SEGUNDA | 3 - TERÇA | 4- QUARTA | 5 - QUINTA | 6 - SEXTA | 7 - SÁBADO)\n");
-            printf("Digite o dia da semana em que o programa é exibido: ");
-            scanf("%d", &op); printf("\n");
-            novoNo->dado.PROGRAMA.data.diasemana = (DiaSemana) op;
+            while(opDia < 1 || opDia > 8){
+                printf("(1 - DOMINGO | 2 - SEGUNDA | 3 - TERÇA | 4- QUARTA | 5 - QUINTA | 6 - SEXTA | 7 - SÁBADO)\n");
+                printf("Digite o dia da semana em que o programa é exibido: ");
+                scanf("%d", &op); printf("\n"); 
+            }
+            
+            novoNo->dado.PROGRAMA.data.diasemana = (DiaSemana) opDia;
         }
 
         printf("Digite o horário de início (HH:MM): ");
@@ -236,8 +242,12 @@ void preencherDado(TipoDado tipo, Arvore *novoNo){
         printf("Digite o tempo (em minutos): ");
         scanf("%d", &(novoNo->dado.PROGRAMA.Tempo)); printf("\n");
 
-        printf("Por último, informe o tipo de transissão do programa (1 - AO VIVO | 2 - SOB DEMANDA): ");
-        scanf("%d", &op); printf("\n");
+        op = 0;
+        while(op < 1 || op > 2){
+            printf("Por último, informe o tipo de transissão do programa (1 - AO VIVO | 2 - SOB DEMANDA): ");
+            scanf("%d", &op); printf("\n");
+        }
+        
         novoNo->dado.PROGRAMA.tipotransmissao = (TipoTransmissao) op; 
 
     }
