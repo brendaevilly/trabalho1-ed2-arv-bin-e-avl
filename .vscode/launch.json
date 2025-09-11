@@ -7,9 +7,9 @@
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
-      "externalConsole": true,
-      "cwd": "//wsl.localhost/Ubuntu-22.04/home/brendaevilly/edII/trabalho1",
-      "program": "//wsl.localhost/Ubuntu-22.04/home/brendaevilly/edII/trabalho1/build/Debug/outDebug",
+      "externalConsole": false,
+      "cwd": "/home/brenda-evilly/Documentos/faculdade/2025-2/ED2/trabalho-01/codigo/TESTES-BST",
+      "program": "/home/brenda-evilly/Documentos/faculdade/2025-2/ED2/trabalho-01/codigo/TESTES-BST/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

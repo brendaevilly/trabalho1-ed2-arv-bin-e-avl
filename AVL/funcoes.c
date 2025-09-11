@@ -41,7 +41,7 @@ void balanceamento(Arvore **no){
         if ((fatorBalanceamento((*no)->esq)) < 0) rotacionaEsquerda(&(*no)->esq);
         rotacionaDireita(no);
     }else if (fb == -2){
-        if ((fatorBalanceamento((*no)->esq)) < 0) rotacionaDireita(&(*no)->esq);
+        if ((fatorBalanceamento((*no)->esq)) > 0) rotacionaDireita(&(*no)->esq);
         rotacionaEsquerda(no);
     }
 }
@@ -230,7 +230,7 @@ void preencherDado(TipoDado tipo, Arvore *novoNo){
             while(opDia < 1 || opDia > 8){
                 printf("(1 - DOMINGO | 2 - SEGUNDA | 3 - TERÇA | 4- QUARTA | 5 - QUINTA | 6 - SEXTA | 7 - SÁBADO)\n");
                 printf("Digite o dia da semana em que o programa é exibido: ");
-                scanf("%d", &op); printf("\n"); 
+                scanf("%d", &opDia); printf("\n"); 
             }
             
             novoNo->dado.PROGRAMA.data.diasemana = (DiaSemana) opDia;
