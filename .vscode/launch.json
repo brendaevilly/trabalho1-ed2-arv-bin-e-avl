@@ -9,7 +9,7 @@
       "stopAtEntry": false,
       "externalConsole": false,
       "cwd": "/home/brenda-evilly/Documentos/faculdade/2025-2/ED2/trabalho-01/codigo/TESTES-BST",
-      "program": "/home/brenda-evilly/Documentos/faculdade/2025-2/ED2/trabalho-01/codigo/TESTES-BST/build/Debug/outDebug",
+      "program": "/home/brenda-evilly/Documentos/faculdade/2025-2/ED2/trabalho-01/codigo/TESTES-BST/build/Release/outRelease",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

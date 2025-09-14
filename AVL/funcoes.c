@@ -8,9 +8,21 @@
 
 // BALANCEAMENTO
 
+void atualizaAltura(Arvore **raiz) {
+    if (*raiz) {
+        if ((*raiz)->esq == NULL && (*raiz)->dir == NULL) (*raiz)->alt = 0;
+        else if ((*raiz)->dir == NULL && (*raiz)->esq) (*raiz)->alt = (*raiz)->esq->alt + 1;
+        else if ((*raiz)->esq == NULL && (*raiz)->dir) (*raiz)->alt = (*raiz)->dir->alt + 1;
+        else {
+            if ((*raiz)->esq->alt > (*raiz)->dir->alt) (*raiz)->alt = (*raiz)->esq->alt + 1;
+            else (*raiz)->alt = (*raiz)->dir->alt + 1;
+        }
+    }
+}
+
 int fatorBalanceamento(Arvore *no){
     int fb;
-    if(no->esq == NULL & no->dir == NULL) fb = 0;
+    if(no->esq == NULL && no->dir == NULL) fb = 0;
     else if(no->esq == NULL && no->dir) fb = -1 - no->dir->alt;
     else if(no->esq && no->dir == NULL) fb = no->esq->alt - (-1);
     else fb = no->esq->alt - no->dir->alt;
@@ -41,20 +53,8 @@ void balanceamento(Arvore **no){
         if ((fatorBalanceamento((*no)->esq)) < 0) rotacionaEsquerda(&(*no)->esq);
         rotacionaDireita(no);
     }else if (fb == -2){
-        if ((fatorBalanceamento((*no)->esq)) > 0) rotacionaDireita(&(*no)->esq);
+        if ((fatorBalanceamento((*no)->dir)) > 0) rotacionaDireita(&(*no)->dir);
         rotacionaEsquerda(no);
-    }
-}
-
-void atualizaAltura(Arvore **raiz) {
-    if (*raiz) {
-        if ((*raiz)->esq == NULL && (*raiz)->dir == NULL) (*raiz)->alt = 0;
-        else if ((*raiz)->dir == NULL && (*raiz)->esq) (*raiz)->alt = (*raiz)->esq->alt + 1;
-        else if ((*raiz)->esq == NULL && (*raiz)->dir) (*raiz)->alt = (*raiz)->dir->alt + 1;
-        else {
-            if ((*raiz)->esq->alt > (*raiz)->dir->alt) (*raiz)->alt = (*raiz)->esq->alt + 1;
-            else (*raiz)->alt = (*raiz)->dir->alt + 1;
-        }
     }
 }
 
