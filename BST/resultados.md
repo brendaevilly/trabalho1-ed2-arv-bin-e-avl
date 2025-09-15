@@ -19,3 +19,7 @@ Foram feitas 30 inserções de 50000 mil nós para cada base de dados.
     | Média Segundos | Média Microssegundos |
     | -------------- | -------------------- |
     | 0.0002617937 | 261.79 |
+
+
+
+    

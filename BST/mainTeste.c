@@ -9,7 +9,7 @@ int main(){
     Arvore *streams = inicializar();
 
     FILE *baseDeDados;
-    baseDeDados = fopen("DbsParaTestes/dbOrdenada.txt", "r");
+    baseDeDados = fopen("DbsParaTestes/dbDesordenada.txt", "r");
     if(baseDeDados == NULL){
         printf("Erro ao abrir o arquivo!\n");
         exit(1);

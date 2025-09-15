@@ -6,16 +6,16 @@ Foram feitas 30 inserções de 50000 mil nós para cada base de dados.
 
     | Média Segundos | Média Microssegundos |
     | -------------- | -------------------- |
-    |  |  |
+    | 0.0000014001 | 1.401 |
 
 - <font color="orange">Base de dados ordenada</font>
 
     | Média Segundos | Média Microssegundos |
     | -------------- | -------------------- |
-    |  |  |
+    | 0.0000010443 | 1.046 |
 
 - <font color="orange">Base de dados desordenada</font>
 
     | Média Segundos | Média Microssegundos |
     | -------------- | -------------------- |
-    |  |  |
+    | 0.0000009184 | 0.918 |
