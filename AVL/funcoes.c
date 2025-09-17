@@ -8,6 +8,7 @@
 
 // BALANCEAMENTO
 
+// Recalcula altura de um nó
 void atualizaAltura(Arvore **raiz) {
     if (*raiz) {
         if ((*raiz)->esq == NULL && (*raiz)->dir == NULL) (*raiz)->alt = 0;
@@ -20,6 +21,7 @@ void atualizaAltura(Arvore **raiz) {
     }
 }
 
+// Calcula o fator de balanceamento de um nó
 int fatorBalanceamento(Arvore *no){
     int fb;
     if(no->esq == NULL && no->dir == NULL) fb = 0;
@@ -30,6 +32,7 @@ int fatorBalanceamento(Arvore *no){
     return (fb);
 }
 
+// Realiza rotação para esquerda
 void rotacionaEsquerda(Arvore **no){
     Arvore *auxi;
     auxi = (*no)->dir;
@@ -38,6 +41,7 @@ void rotacionaEsquerda(Arvore **no){
     *no = auxi;
 }
 
+// Realiza rotação para direita
 void rotacionaDireita(Arvore **no){
     Arvore *auxi;
     auxi = (*no)->esq;
@@ -46,6 +50,7 @@ void rotacionaDireita(Arvore **no){
     *no = auxi;
 }
 
+// Balancea árvore se estiver desbalanceada
 void balanceamento(Arvore **no){
     int fb = fatorBalanceamento(*no);
 
@@ -93,11 +98,11 @@ struct tm *tempoAtual(){
     time_t agora;
     time(&agora);
 
-    struct tm *infoTempoLocal = malloc(sizeof(struct tm));  // aloca memória própria
+    struct tm *infoTempoLocal = malloc(sizeof(struct tm));
     if(!infoTempoLocal) return NULL;
 
     struct tm *tmp = localtime(&agora);
-    if(tmp) *infoTempoLocal = *tmp;  // copia o conteúdo
+    if(tmp) *infoTempoLocal = *tmp; 
     else {
         free(infoTempoLocal);
         return NULL;
@@ -128,8 +133,6 @@ Arvore *maiorAhEsquerda(Arvore *no, Arvore **paiMaior){
         busca = busca->dir;
     }
     return (*paiMaior)->dir;
-    //if(no->dir) maiorAhEsquerda(no->dir);
-    //return no;
 }
 
 int existeApresentador(Apresentador *lista, char *nome){
@@ -167,24 +170,25 @@ int existeCategoria(Categorias *lista, char *nome){
     return i;
 }
 
-Categorias *buscaERetornaCategoria(Categorias *lista, char *nome){
-    Categorias *atual = lista, *busca = NULL;
+Categorias *buscaCategoria(Categorias *lista, char *nome){
     deixaMaiuscula(nome);
-    do{
-        if(strcmp(atual->nome, nome) == 0) busca = atual;
-        atual = atual->prox;
-    }while(atual != lista);
+    Categorias *atual = lista, *i = NULL;
+    if(atual){
+        do{
+            if(strcmp(atual->nome, nome) == 0) i = atual;
+            atual = atual->prox;
+        }while(atual != lista); 
+    }
 
-    return busca;
+    return i;
 }
-
 
 int validarApresentador(Apresentador *lista, char *nomeAp, char *nomeStream, char *nomeCategoria) {
     int i = 1;
     char auxAP[50], auxST[50], auxCT[50];
     strcpy(auxAP, nomeAp); deixaMaiuscula(auxAP);
     strcpy(auxST, nomeStream); deixaMaiuscula(auxST);
-    strcpy(auxCT, nomeCategoria); deixaMaiuscula(auxCT);  // padroniza comparação
+    strcpy(auxCT, nomeCategoria); deixaMaiuscula(auxCT); 
     Apresentador *ap = NULL;
     ap = buscaApresentador(lista, auxAP);
 
@@ -332,9 +336,6 @@ int removerDaArvore(Arvore **arvore, Arvore *vaiSerRemovido){
                     (*arvore)->dado = noMaior->dado;
                     paiMaior->dir = noMaior->esq;
                     auxi = noMaior;
-                    //auxi = maiorAhEsquerda((*arvore)->esq);
-                    //(*arvore)->dado = auxi->dado;
-                    //removerDaArvore(&((*arvore)->esq), auxi);
                 }
             }
             free(auxi);
@@ -386,7 +387,7 @@ void iniciaST(Apresentador *p){
     p->stAntigas[p->quantidadeStAntigas - 1].fim.mes = 0;
     p->stAntigas[p->quantidadeStAntigas - 1].fim.ano = 0;
 
-    free(infoTempoLocal); // libera ponteiro retornado por tempoAtualprintf("Erro ao alocar memoria para stAntigas!\n");
+    free(infoTempoLocal);
 }
 
 
@@ -427,7 +428,6 @@ int cadastrarCategoria(Categorias *nova, char *nomeST, Arvore *arvST){
                 cadastrou = 1;
                 Categorias *atual = *lista;
                 Categorias *anterior = NULL;
-                // Procurar posição para inserir em ordem
                 do {
                     if (strcmp(nova->nome, atual->nome) < 0) break;
                     anterior = atual;
@@ -435,24 +435,20 @@ int cadastrarCategoria(Categorias *nova, char *nomeST, Arvore *arvST){
                 } while (atual != *lista);
 
                 if (anterior == NULL) {
-                    // Inserção antes do primeiro (nova menor que o atual primeiro)
-                    // Preciso achar o último para fechar o círculo
                     Categorias *ultimo = *lista;
                     while (ultimo->prox != *lista) ultimo = ultimo->prox;
                     ultimo->prox = nova;
                     nova->prox = *lista;
-                    *lista = nova; // nova vira o primeiro
+                    *lista = nova; 
                 } else {
-                    // Inserção no meio ou no final
                     anterior->prox = nova;
                     nova->prox = atual;
                 }
             }
         } else {
-            // Primeira categoria
             cadastrou = 1;
             *lista = nova;
-            nova->prox = nova; // circular
+            nova->prox = nova;
         }
     }
     return cadastrou;
@@ -476,7 +472,6 @@ int inserirApresentadorOrdenado(Apresentador **lista, Apresentador *novo){
             if(atual){
                 if(strcmp(novo->nome, atual->nome) != 0){
                     inseriu = 1;
-                    // Inserir no meio da lista
                     ant->prox = novo;
                     novo->ant = ant;
                     atual->ant = novo;
@@ -484,7 +479,6 @@ int inserirApresentadorOrdenado(Apresentador **lista, Apresentador *novo){
                 }
             }else {
                 inseriu = 1;
-                // Inserir no final da lista
                 ant->prox = novo;
                 novo->ant = ant;
             }
@@ -515,9 +509,6 @@ int cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador **list
     return cadastrar;
 }
 
-// FUNÇÕES DE MOSTRAR/REMOVER DE LISTAS E FUNÇÕES
-// Precisa testar td abaixo
-
 void mostrarCategoriasDeST(char *nome, Arvore *arvST){
     deixaMaiuscula(nome);
     Arvore *stream = buscarNaArvore(arvST, nome);
@@ -530,19 +521,6 @@ void mostrarCategoriasDeST(char *nome, Arvore *arvST){
             }while(atual != stream->dado.STREAM.categorias);
         }
     }
-}
-
-Categorias *buscaCategoria(Categorias *lista, char *nome){
-    deixaMaiuscula(nome);
-    Categorias *atual = lista, *i = NULL;
-    if(atual){
-        do{
-            if(strcmp(atual->nome, nome) == 0) i = atual;
-            atual = atual->prox;
-        }while(atual != lista); 
-    }
-
-    return i;
 }
 
 void mostrarProgsDeCategDeST(char *nomeST, Arvore *arvST, char *nomeCateg){
@@ -635,8 +613,6 @@ int removerCategDeST(Arvore *arvST, char *nomeST, char *nomeCateg){
     return removeu;
 }
 
-// AUXILIA FUNÇÕES DE ALTERAR
-
 Arvore *existeApresentadorEmPrograma(Arvore *programa, char *nomeAP){
     deixaMaiuscula(nomeAP);
     Arvore *busca = NULL;
@@ -663,8 +639,6 @@ Categorias *existeApresentadorEmCategorias(Categorias *lista, char *nomeAP, Arvo
     return ant;
     
 }
-
-// ALTERAR REMOVENDO O PROGRAMA ANTIGO DO APRESENTADOR
 
 int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *apresentador, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma){
     int i = 0;
@@ -706,7 +680,7 @@ int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *ap
                 strcpy(apresentador->nomeCategoriaAtual, categoriaNovoPrograma);
                 
                 // Insere o novo programa na nova Stream
-                auxi = buscaERetornaCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
+                auxi = buscaCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
                 i = inserirArvBin(&(auxi->programa), novoPrograma);
             }
         }
@@ -714,8 +688,6 @@ int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *ap
 
     return i;
 }
-
-// ALTERAR COLOCANDO OUTRO APRESENTADR NO PROGRAMA ANTIGO DO APRESENTADOR
 
 int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, Apresentador **lista, Apresentador *apresentador, Apresentador *substituto, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma){
     int i = 0;
@@ -764,7 +736,7 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
                     strcpy(apresentador->nomeCategoriaAtual, categoriaNovoPrograma);
                     
                     // Insere o novo programa na nova Stream
-                    auxi = buscaERetornaCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
+                    auxi = buscaCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
                     i = inserirArvBin(&(auxi->programa), novoPrograma);
                 }
                 
@@ -775,11 +747,8 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
     return i;
 }
 
-
-// PEDRO
-
 int compararDiaSemana(DiaSemana d1, DiaSemana d2) {
-    int resultado = 0; // iguais
+    int resultado = 0;
     if (d1 < d2) resultado = -1;
     else if (d1 > d2) resultado = 1;
     return resultado;

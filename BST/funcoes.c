@@ -7,10 +7,12 @@
 #include "prototipos.h"
 
 // UTILITÁRIOS
+// Inicializa árvores
 Arvore *inicializar(){
     return NULL;
 }
 
+// Aloca memória para árvores
 Arvore *alocar(TipoDado tipo){
     Arvore *arv = (Arvore *)malloc(sizeof(Arvore));
     if(!arv) return NULL;
@@ -19,6 +21,7 @@ Arvore *alocar(TipoDado tipo){
     return arv;
 }
 
+// Aloca memória para lista de categoria
 Categorias *alocarCategoria(){
     Categorias *no = (Categorias *)malloc(sizeof(Categorias));
     if(!no) return NULL;
@@ -26,25 +29,28 @@ Categorias *alocarCategoria(){
     return no;
 }
 
+// Aloca memória para lista de apresentador
 Apresentador *alocarApresentador(){
     Apresentador *no = (Apresentador *)malloc(sizeof(Apresentador));
     no->ant = no->prox = NULL;
     return no;
 }
 
+// Pega string e deixa todos os seus char maiúsculos
 void deixaMaiuscula(char *str){
     for(int i=0; str[i]!='\0'; i++) str[i] = toupper((unsigned char) str[i]);
 }
 
+// Retorna tempo atual do sistema
 struct tm *tempoAtual(){
     time_t agora;
     time(&agora);
 
-    struct tm *infoTempoLocal = malloc(sizeof(struct tm));  // aloca memória própria
+    struct tm *infoTempoLocal = malloc(sizeof(struct tm));
     if(!infoTempoLocal) return NULL;
 
     struct tm *tmp = localtime(&agora);
-    if(tmp) *infoTempoLocal = *tmp;  // copia o conteúdo
+    if(tmp) *infoTempoLocal = *tmp;
     else {
         free(infoTempoLocal);
         return NULL;
@@ -54,12 +60,14 @@ struct tm *tempoAtual(){
 }
 
 
+// Verifica se um nó é folha
 int ehFolha(Arvore *no){
     int i = 0;
     if(no->dir == NULL && no->esq == NULL) i = 1;
     return i;
 }
 
+// Verifica se um nó tem apenas um filho
 Arvore *soUmFilho(Arvore *no){
     Arvore *filho = NULL;
     if(no->dir == NULL && no->esq) filho = no->esq;
@@ -67,6 +75,7 @@ Arvore *soUmFilho(Arvore *no){
     return filho;
 }
 
+// Retorna o maior nó na esquerda de uma árvore e o seu nó pai
 Arvore *maiorAhEsquerda(Arvore *no, Arvore **paiMaior){
     Arvore *busca = no->esq;
     *paiMaior = no;
@@ -75,10 +84,9 @@ Arvore *maiorAhEsquerda(Arvore *no, Arvore **paiMaior){
         busca = busca->dir;
     }
     return (*paiMaior)->dir;
-    //if(no->dir) maiorAhEsquerda(no->dir);
-    //return no;
 }
 
+// Verifica se um apresentador está na lista
 int existeApresentador(Apresentador *lista, char *nome){
     deixaMaiuscula(nome);
     int i = 0;
@@ -90,6 +98,7 @@ int existeApresentador(Apresentador *lista, char *nome){
     return i;
 }
 
+// Busca e retorna apresentador na lista
 Apresentador *buscaApresentador(Apresentador *lista, char *nome){
     char aux[50];
     strcpy(aux, nome);
@@ -103,6 +112,7 @@ Apresentador *buscaApresentador(Apresentador *lista, char *nome){
     return busca;
 }
 
+// Verifica se existe categoria na lista
 int existeCategoria(Categorias *lista, char *nome){
     int i = 0;
     deixaMaiuscula(nome);
@@ -114,24 +124,27 @@ int existeCategoria(Categorias *lista, char *nome){
     return i;
 }
 
-Categorias *buscaERetornaCategoria(Categorias *lista, char *nome){
-    Categorias *atual = lista, *busca = NULL;
+// Busca e retorna categoria na lista
+Categorias *buscaCategoria(Categorias *lista, char *nome){
     deixaMaiuscula(nome);
-    do{
-        if(strcmp(atual->nome, nome) == 0) busca = atual;
-        atual = atual->prox;
-    }while(atual != lista);
+    Categorias *atual = lista, *i = NULL;
+    if(atual){
+        do{
+            if(strcmp(atual->nome, nome) == 0) i = atual;
+            atual = atual->prox;
+        }while(atual != lista); 
+    }
 
-    return busca;
+    return i;
 }
 
-
+// Verifica se um apresentador existe e se está em stream e categoria específicos
 int validarApresentador(Apresentador *lista, char *nomeAp, char *nomeStream, char *nomeCategoria) {
     int i = 1;
     char auxAP[50], auxST[50], auxCT[50];
     strcpy(auxAP, nomeAp); deixaMaiuscula(auxAP);
     strcpy(auxST, nomeStream); deixaMaiuscula(auxST);
-    strcpy(auxCT, nomeCategoria); deixaMaiuscula(auxCT);  // padroniza comparação
+    strcpy(auxCT, nomeCategoria); deixaMaiuscula(auxCT);
     Apresentador *ap = NULL;
     ap = buscaApresentador(lista, auxAP);
 
@@ -144,6 +157,7 @@ int validarApresentador(Apresentador *lista, char *nomeAp, char *nomeStream, cha
 }
 
 // ÁRVORE
+// Preenche dados de nó de arvore
 void preencherDado(TipoDado tipo, Arvore *novoNo){
     char auxi[50];
 
@@ -207,7 +221,7 @@ void preencherDado(TipoDado tipo, Arvore *novoNo){
     }
 }
 
-
+// Insere nó em árvore
 int inserirArvBin(Arvore **R, Arvore *novono) {
     int inseriu = 0;
     if (*R == NULL) {
@@ -221,6 +235,7 @@ int inserirArvBin(Arvore **R, Arvore *novono) {
     return inseriu;
 }
 
+// Imprime dados de nós de uma árvore
 void imprimirArvore(Arvore *raiz) {
     if(raiz){
         imprimirArvore(raiz->esq);
@@ -236,6 +251,7 @@ void imprimirArvore(Arvore *raiz) {
     }
 }
 
+// Busca e retorna um nó na árvore
 Arvore* buscarNaArvore(Arvore *raiz, char *nome){
     Arvore *busca = NULL;
     if(raiz){
@@ -254,6 +270,7 @@ Arvore* buscarNaArvore(Arvore *raiz, char *nome){
     return busca;
 }
 
+// Remove um nó da árvore
 int removerDaArvore(Arvore **arvore, Arvore *vaiSerRemovido){
     int remover = 0;
     if(*arvore){
@@ -276,9 +293,6 @@ int removerDaArvore(Arvore **arvore, Arvore *vaiSerRemovido){
                     (*arvore)->dado = noMaior->dado;
                     paiMaior->dir = noMaior->esq;
                     auxi = noMaior;
-                    //auxi = maiorAhEsquerda((*arvore)->esq);
-                    //(*arvore)->dado = auxi->dado;
-                    //removerDaArvore(&((*arvore)->esq), auxi);
                 }
             }
             free(auxi);
@@ -289,6 +303,7 @@ int removerDaArvore(Arvore **arvore, Arvore *vaiSerRemovido){
 }
 
 // LISTAS
+// Cria categoria e preenche seus dados
 Categorias *criaCategoria(TipoCategoria tipoC, char *nomeC){
     Categorias *nova = alocarCategoria();
     if(!nova) return NULL;
@@ -305,6 +320,7 @@ Categorias *criaCategoria(TipoCategoria tipoC, char *nomeC){
     return nova;
 }
 
+// Encerra stream de apresentador quando ele sai dela
 void encerraST(Apresentador *ap){
         struct tm *infoTempoLocal = tempoAtual();
         ap->stAntigas[ap->quantidadeStAntigas - 1].fim.dia = infoTempoLocal->tm_mday;
@@ -315,6 +331,7 @@ void encerraST(Apresentador *ap){
         strcpy(ap->nomeCategoriaAtual, " ");
 }
 
+// Inicia stream de apresentador quando ele começa a trabalhar nela
 void iniciaST(Apresentador *p){
     struct tm *infoTempoLocal = tempoAtual();
     p->stAntigas[p->quantidadeStAntigas - 1].inicio.dia = infoTempoLocal->tm_mday;
@@ -325,10 +342,10 @@ void iniciaST(Apresentador *p){
     p->stAntigas[p->quantidadeStAntigas - 1].fim.mes = 0;
     p->stAntigas[p->quantidadeStAntigas - 1].fim.ano = 0;
 
-    free(infoTempoLocal); // libera ponteiro retornado por tempoAtualprintf("Erro ao alocar memoria para stAntigas!\n");
+    free(infoTempoLocal);
 }
 
-
+// Cria apresentador e preenche seus dados
 Apresentador *criaApresentador(char *nome, char *nomeCat, char *nomeST){
     Apresentador *novo = alocarApresentador(); 
     if(!novo) return NULL;
@@ -354,6 +371,7 @@ Apresentador *criaApresentador(char *nome, char *nomeCat, char *nomeST){
     return novo;
 }
 
+// Cadastra categoria na lista de categorias
 int cadastrarCategoria(Categorias *nova, char *nomeST, Arvore *arvST){
     int cadastrou = 0;
     deixaMaiuscula(nomeST);
@@ -397,6 +415,7 @@ int cadastrarCategoria(Categorias *nova, char *nomeST, Arvore *arvST){
     return cadastrou;
 }
 
+// Insere apresentador na lista de apresentadores de maneira ordenada
 int inserirApresentadorOrdenado(Apresentador **lista, Apresentador *novo){
     int inseriu = 0;
     if(*lista){
@@ -436,6 +455,7 @@ int inserirApresentadorOrdenado(Apresentador **lista, Apresentador *novo){
     return inseriu;
 }
 
+// Insere apresentador na lista de apresentadores
 int cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador **listaAP){
     int cadastrar = 0;
     if(existeApresentador(*listaAP, novo->nome) == 0){
@@ -454,9 +474,7 @@ int cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador **list
     return cadastrar;
 }
 
-// FUNÇÕES DE MOSTRAR/REMOVER DE LISTAS E FUNÇÕES
-// Precisa testar td abaixo
-
+// Mostra categorias de uma stream
 void mostrarCategoriasDeST(char *nome, Arvore *arvST){
     deixaMaiuscula(nome);
     Arvore *stream = buscarNaArvore(arvST, nome);
@@ -471,19 +489,7 @@ void mostrarCategoriasDeST(char *nome, Arvore *arvST){
     }
 }
 
-Categorias *buscaCategoria(Categorias *lista, char *nome){
-    deixaMaiuscula(nome);
-    Categorias *atual = lista, *i = NULL;
-    if(atual){
-        do{
-            if(strcmp(atual->nome, nome) == 0) i = atual;
-            atual = atual->prox;
-        }while(atual != lista); 
-    }
-
-    return i;
-}
-
+// Mostra programas de uma categoria de uma stream
 void mostrarProgsDeCategDeST(char *nomeST, Arvore *arvST, char *nomeCateg){
     deixaMaiuscula(nomeCateg);
     deixaMaiuscula(nomeST);
@@ -496,6 +502,7 @@ void mostrarProgsDeCategDeST(char *nomeST, Arvore *arvST, char *nomeCateg){
     }
 }
 
+// Mostra streams que tem uma categoria
 void mostrarStsQueTemCategoria(char *nomeCateg, Arvore *arvST){
     deixaMaiuscula(nomeCateg);
     if(arvST){
@@ -507,6 +514,7 @@ void mostrarStsQueTemCategoria(char *nomeCateg, Arvore *arvST){
     }
 }
 
+// Remove programa de uma categoria de uma stream
 int removerProgramaDeCateDeST(Arvore *arvST, char *nomeST, char *nomeCateg, char *nomeProg){
     int i = 0;
     Arvore *stream = buscarNaArvore(arvST, nomeST);
@@ -525,6 +533,7 @@ int removerProgramaDeCateDeST(Arvore *arvST, char *nomeST, char *nomeCateg, char
     return i;
 }
 
+// Remove categoria da lista de categorias
 Categorias *removerCategoria(Categorias *lista, Categorias *no){
     if(lista == lista->prox){
         free(lista);
@@ -554,6 +563,7 @@ Categorias *removerCategoria(Categorias *lista, Categorias *no){
     return lista;
 }
 
+// Remove categoria de uma lista de categorias de uma stream
 int removerCategDeST(Arvore *arvST, char *nomeST, char *nomeCateg){
     int removeu = 0;
     Arvore *stream = buscarNaArvore(arvST, nomeST);
@@ -574,8 +584,8 @@ int removerCategDeST(Arvore *arvST, char *nomeST, char *nomeCateg){
     return removeu;
 }
 
-// AUXILIA FUNÇÕES DE ALTERAR
 
+// Verifica se existe um apresentador em um programa 
 Arvore *existeApresentadorEmPrograma(Arvore *programa, char *nomeAP){
     deixaMaiuscula(nomeAP);
     Arvore *busca = NULL;
@@ -589,6 +599,7 @@ Arvore *existeApresentadorEmPrograma(Arvore *programa, char *nomeAP){
     return busca;
 }
 
+// Verifica se existe um apresentador em uma categoria
 Categorias *existeApresentadorEmCategorias(Categorias *lista, char *nomeAP, Arvore **res){
     Categorias *atual = lista, *ant = NULL;
     if(lista){
@@ -603,8 +614,7 @@ Categorias *existeApresentadorEmCategorias(Categorias *lista, char *nomeAP, Arvo
     
 }
 
-// ALTERAR REMOVENDO O PROGRAMA ANTIGO DO APRESENTADOR
-
+// Altera stream de apresentador e remove seu programa
 int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *apresentador, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma){
     int i = 0;
     deixaMaiuscula(nomeNovaStream);
@@ -631,7 +641,7 @@ int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *ap
             // Se existe
             if(j){
                 Categorias *auxi;
-                // EcerraST = coloca a data de término na Stream no vetor de Streams antigas e remove programa atual da stream
+                // EncerraST = coloca a data de término na Stream no vetor de Streams antigas e remove programa atual da stream
                 encerraST(apresentador);
                 res = NULL;
                 cat = existeApresentadorEmCategorias(atualST->dado.STREAM.categorias, apresentador->nome, &res); 
@@ -645,7 +655,7 @@ int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *ap
                 strcpy(apresentador->nomeCategoriaAtual, categoriaNovoPrograma);
                 
                 // Insere o novo programa na nova Stream
-                auxi = buscaERetornaCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
+                auxi = buscaCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
                 i = inserirArvBin(&(auxi->programa), novoPrograma);
             }
         }
@@ -654,8 +664,7 @@ int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *ap
     return i;
 }
 
-// ALTERAR COLOCANDO OUTRO APRESENTADR NO PROGRAMA ANTIGO DO APRESENTADOR
-
+// Altera stream de apresentador e substitui apresentador do programa
 int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, Apresentador **lista, Apresentador *apresentador, Apresentador *substituto, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma){
     int i = 0;
     deixaMaiuscula(nomeNovaStream);
@@ -703,7 +712,7 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
                     strcpy(apresentador->nomeCategoriaAtual, categoriaNovoPrograma);
                     
                     // Insere o novo programa na nova Stream
-                    auxi = buscaERetornaCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
+                    auxi = buscaCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
                     i = inserirArvBin(&(auxi->programa), novoPrograma);
                 }
                 
@@ -715,8 +724,7 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
 }
 
 
-// PEDRO
-
+// Compara dias da semana
 int compararDiaSemana(DiaSemana d1, DiaSemana d2) {
     int resultado = 0; // iguais
     if (d1 < d2) resultado = -1;
@@ -724,6 +732,7 @@ int compararDiaSemana(DiaSemana d1, DiaSemana d2) {
     return resultado;
 }
 
+// Mostra programas que são transmitidos em um dia específico da semana
 void mostrarProgramasPorDiaSemana(Arvore *raiz, DiaSemana dia) {
     if(raiz) {
         mostrarProgramasPorDiaSemana(raiz->esq, dia);
@@ -743,6 +752,7 @@ void mostrarProgramasPorDiaSemana(Arvore *raiz, DiaSemana dia) {
     }
 }
 
+// Imprime programas transmitidos em um determinado dia e horário
 void imprimiPGDiaHorario(Arvore *raiz, DiaSemana dia, char *horario){
     if(raiz){
         if(raiz->dado.PROGRAMA.data.diasemana == dia && strcmp(raiz->dado.PROGRAMA.HorarioInicio, horario) == 0){
@@ -758,6 +768,7 @@ void imprimiPGDiaHorario(Arvore *raiz, DiaSemana dia, char *horario){
     }
 }
 
+// Função auxiliar a de cima, com verificações a mais
 void mostrarProgramasDeStreamPorDiaSemanaHorario(Arvore *arvST, char *nomeST, char *horario, DiaSemana dia) {
     Arvore *stream = buscarNaArvore(arvST, nomeST);
     if(stream) {
@@ -774,6 +785,7 @@ void mostrarProgramasDeStreamPorDiaSemanaHorario(Arvore *arvST, char *nomeST, ch
     }else printf("Stream %s não encontrada.\n", nomeST);
 }
 
+// Imprime streams com um determinado tipo de categoria
 void imprimeStreamsPorCategoria(Arvore *arvST, TipoCategoria tipo) {
     if(arvST) {
         imprimeStreamsPorCategoria(arvST->esq, tipo);
@@ -801,6 +813,7 @@ void imprimeStreamsPorCategoria(Arvore *arvST, TipoCategoria tipo) {
     }
 }
 
+// Mostra programas de categoria por dia da semana
 void mostrarProgramasDeCategoriaPorDiaSemana(Arvore *arvST, char *nomeST, char *nomeCateg, DiaSemana dia) {
     Arvore *stream = buscarNaArvore(arvST, nomeST);
     if(stream) {
@@ -815,6 +828,7 @@ void mostrarProgramasDeCategoriaPorDiaSemana(Arvore *arvST, char *nomeST, char *
     }
 }
 
+// Mostra os apresentadores de uma stream
 void mostrarApresentadoresDeStream(Apresentador *lista, char *nomeST) {
     if(!lista) {
         printf("Nenhum apresentador cadastrado.\n");
@@ -842,6 +856,7 @@ void mostrarApresentadoresDeStream(Apresentador *lista, char *nomeST) {
     }
 }
 
+// Mostra dados de um programa de uma categoria de uma stream 
 void mostrarDadosdeumProgramadeumaCategoriadeumaStream(Arvore *arvST, char *nomeST, char *nomeCateg, char *nomeProg){
     deixaMaiuscula(nomeCateg);
     deixaMaiuscula(nomeProg);
@@ -863,9 +878,10 @@ void mostrarDadosdeumProgramadeumaCategoriadeumaStream(Arvore *arvST, char *nome
     } else printf("Stream %s não encontrada.\n", nomeST); 
 }
 
+// Mostra apresentadores de uma categoria
 void mostrarApresentadoresDeCategoria(Apresentador *lista, char *nomeCategoria) {
     if (lista){
-        deixaMaiuscula(nomeCategoria);  // padroniza entrada
+        deixaMaiuscula(nomeCategoria);
 
         Apresentador *atual = lista;
         int encontrou = 0;
