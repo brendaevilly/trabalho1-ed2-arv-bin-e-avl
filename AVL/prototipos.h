@@ -2,7 +2,6 @@
 #define PROTOTIPOS_H
 
 #include <time.h>
-//tt
 
 // PRÉ DEFINIÇÕES DE STRUCTS
 struct programa;

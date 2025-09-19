@@ -6,15 +6,16 @@
 #include "prototipos.h"
 
 int main(){
-    Arvore *streams = inicializar();
+    //Arvore *streams = inicializar();
 
     FILE *baseDeDados;
-    baseDeDados = fopen("DbsParaTestes/dbDesordenada.txt", "r");
+    baseDeDados = fopen("DbsParaTestes/dbAleatoria.txt", "w");
     if(baseDeDados == NULL){
         printf("Erro ao abrir o arquivo!\n");
         exit(1);
     }
-    
+
+    /*
     char buffer[16];
     clock_t inicio, fim;
     double tempo, tempoMicro, somaTempo = 0.0, somaTempoMicro = 0.0;
@@ -39,13 +40,13 @@ int main(){
 
     printf("| %.10f |", somaTempo / 50000.0);
     printf(" %.2f |\n", somaTempoMicro / 50000.0);
-    /*
+    */
+    
     for(int i=0; i<50000; i++){
-        fprintf(baseDeDados, "%d\n", i);
+        fprintf(baseDeDados, "%d\n", rand() % 500000000);
     }
         
     fclose(baseDeDados);
-    */
    
 
     return 0;
